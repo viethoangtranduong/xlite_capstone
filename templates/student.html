@@ -1,0 +1,20 @@
+<html>
+   <body>
+      <h3> Welcome to the sumamry page. Paste in the link to your favorite news and begin</h3>
+      <form action = "{{ url_for('result') }}" method = "POST">
+         <!-- <p>Name <input type = "text" name = "Name" /></p>
+         <p>Physics <input type = "text" name = "Physics" /></p>
+         <p>Chemistry <input type = "text" name = "chemistry" /></p>
+         <p>Maths <input type ="text" name = "Mathematics" /></p> -->
+         <p>Note: URLs will out-write the Text</p>
+         <p>URL <input type ="text" name = "url_for_news" /></p>
+         <p>Text <input type ="text" name = "text_for_news" /></p>
+         <p>Number of sentences <input type ="integer" name = "num_sentence" /></p>
+         <p><input type = "submit" value = "submit" /></p>
+         <p> Method: {{ method }}, with length: {{ length }} </p>
+         <p> Summary: {{ summary }} </p> -->
+
+      </form>
+
+   </body>
+</html>
