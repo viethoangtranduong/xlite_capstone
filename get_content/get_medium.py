@@ -2,10 +2,29 @@ import pandas as pd
 from ast import literal_eval
 from datetime import datetime
 
+
 def time_convert(txt):
+  """conver string of time to time data
+
+  Args:
+      txt (str): string of time data
+
+  Returns:
+      datetime of the given string
+  """  
   return datetime.strptime(txt, '%d/%m/%Y')
 
 def clap_convert(txt):
+  """convert string of clap values on medium to actualy number
+
+  Args:
+      txt (str): claps values
+
+  Returns:
+      number on claps (int)
+  """ 
+
+  # Medium annotation 
   if txt[-1] == "K":
     output = int(float(txt[:-1]) * 1000)
     return output
@@ -13,22 +32,40 @@ def clap_convert(txt):
     return int(txt)
 
 def select_medium(entry, start_date, end_date, num_result = 10):
+  """ get the content from Medium files
+
+  Args:
+      entry (str): publisher
+      start_date (date): start date from querying
+      end_date (date): end date for querying
+      num_result (int, optional): number of returns. Defaults to 10.
+
+  Returns:
+      [type]: [description]
+  """  
+
+  # get all data
   data = pd.read_csv("/home/viethoangtranduong/xlite_capstone/medium_data/" + entry)
 
+  # convert the data back to its original type
   data.paragraphs = data.paragraphs.apply(literal_eval)
   data.section_titles = data.section_titles.apply(literal_eval)
 
+  # convert Medium annotation to normal annotation
   data['datetime'] = data.date.apply(time_convert)
   data['num_claps'] = data.claps.apply(clap_convert)
 
+  # filter
   cur_data = data[data.datetime.between(start_date, end_date, inclusive=True)]
 
+  # get all the txt for wordcloud
   txt = ""
 
   for val in list(cur_data.title):
     txt += val + " "
 
 
+  # getting the content of the most clapped posts
   cur_data = cur_data.sort_values(by=['num_claps'], ascending = False)[:num_result]
   cur_data.reset_index(inplace = True, drop = True)
 
@@ -43,6 +80,17 @@ def select_medium(entry, start_date, end_date, num_result = 10):
   return output, txt
 
 def get_medium(entry, start_date, end_date, num_result = 10):
+    """convert medium name to currect file name
+
+    Args:
+        entry (str): publisher
+        start_date (date): start date from querying
+        end_date (date): end date for querying
+        num_result (int, optional): number of returns. Defaults to 10.
+
+    Returns:
+        [type]: [description]
+    """    
     files = ['httpsuxdesigncc.csv',
             'httpsmediumcomzora.csv',
             'httpsmediumcomheated.csv',
@@ -71,6 +119,7 @@ def get_medium(entry, start_date, end_date, num_result = 10):
 
     mapping = dict(zip(names, files))
 
+    # get result using the select_medium function
     results, text = select_medium(mapping[entry], start_date, end_date, num_result)
 
     return results, text

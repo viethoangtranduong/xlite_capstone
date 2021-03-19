@@ -1,5 +1,5 @@
+
 from flask import Flask, render_template, request
-# import requests
 from get_content.read_url import read_url
 from get_content.get_summary import get_summary
 from get_content.get_medium import get_medium
@@ -15,14 +15,12 @@ import string
 application = Flask(__name__, static_url_path='/static')
 
 @application.route('/')
-def student():
-   # method = "The summarization method will be here"
-   # summary = "Your summary output"
-   # length = "Length of the summary"
+def student():   
    return render_template('index.html')
 
 @application.route('/info_summarize', methods = ['POST', 'GET'])
 def info_summarize():
+   
    print("haha")
    if request.method == 'POST':
       print("haha")

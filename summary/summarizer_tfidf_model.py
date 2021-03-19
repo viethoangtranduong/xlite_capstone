@@ -6,7 +6,7 @@ nltk.download('stopwords')
 from nltk.corpus import stopwords  
 import numpy as np
   
-  
+# extracting from https://github.com/bhuwanesh340/Text_Summarization_NLP/blob/master/Text_Summary.py
     
 '''
 We already have a sentence tokenizer, so we just need 
@@ -14,10 +14,21 @@ to run the sent_tokenize() method to create the array of sentences.
 '''
 
 def _create_frequency_matrix(sentences):
+    """get frequency matrix for words
+
+    Args:
+        sentences (str): text
+
+    Returns:
+        frequency matrix
+    """    
     frequency_matrix = {}
     stopWords = set(stopwords.words("english"))
     ps = PorterStemmer()
 
+    # remove stopwords and build a frequency matrix
+    # if word not there, add to dictionary
+    # if it's there, then add +1 to that value
     for sent in sentences:
         freq_table = {}
         words = word_tokenize(sent)
@@ -26,7 +37,6 @@ def _create_frequency_matrix(sentences):
             word = ps.stem(word)
             if word in stopWords:
                 continue
-
             if word in freq_table:
                 freq_table[word] += 1
             else:
@@ -38,8 +48,17 @@ def _create_frequency_matrix(sentences):
 
 
 def _create_tf_matrix(freq_matrix):
+    """get term frequency
+
+    Args:
+        frequency matrix (dict)
+
+    Returns:
+        term frequency matrix
+    """      
     tf_matrix = {}
 
+    # frequency divide by length of document
     for sent, f_table in freq_matrix.items():
         tf_table = {}
 
@@ -53,8 +72,17 @@ def _create_tf_matrix(freq_matrix):
 
 
 def _create_documents_per_words(freq_matrix):
+    """create documents for each word
+
+    Args:
+        frequency matrix (dict)
+
+    Returns:
+        document per word
+    """      
     word_per_doc_table = {}
 
+    # start counting 
     for sent, f_table in freq_matrix.items():
         for word, count in f_table.items():
             if word in word_per_doc_table:
@@ -66,11 +94,22 @@ def _create_documents_per_words(freq_matrix):
 
 
 def _create_idf_matrix(freq_matrix, count_doc_per_words, total_documents):
+    """iv=nverse document frequency
+
+    Args:
+        freq_matrix (dict): frequency
+        count_doc_per_words (dict): document frequency
+        total_documents (int): number of documents
+
+    Returns:
+        inverse document frequency matrix
+    """    
     idf_matrix = {}
 
     for sent, f_table in freq_matrix.items():
         idf_table = {}
 
+        # follow the formula
         for word in f_table.keys():
             idf_table[word] = math.log10(total_documents / float(count_doc_per_words[word]))
 
@@ -80,6 +119,15 @@ def _create_idf_matrix(freq_matrix, count_doc_per_words, total_documents):
 
 
 def _create_tf_idf_matrix(tf_matrix, idf_matrix):
+    """tf-idf matrix from tf and idf matrices
+
+    Args:
+        tf_matrix (dict): term frequency
+        idf_matrix (dict):document frequency
+
+    Returns:
+        dict: tf-idf matrix
+    """    
     tf_idf_matrix = {}
 
     for (sent1, f_table1), (sent2, f_table2) in zip(tf_matrix.items(), idf_matrix.items()):
@@ -96,11 +144,15 @@ def _create_tf_idf_matrix(tf_matrix, idf_matrix):
 
 
 def _score_sentences(tf_idf_matrix) -> dict:
-    """
-    score a sentence by its word's TF
-    Basic algorithm: adding the TF frequency of every non-stop word in a sentence divided by total no of words in a sentence.
-    :rtype: dict
-    """
+    """score a sentence by its word's TF: adding the TF frequency of 
+    every non-stop word in a sentence divided by total no of words in a sentence.
+
+    Args:
+        tf_idf_matrix (dict): tf-idf values above
+
+    Returns:
+        dict: each sentence value
+    """    
 
     sentenceValue = {}
 
@@ -110,17 +162,22 @@ def _score_sentences(tf_idf_matrix) -> dict:
         count_words_in_sentence = len(f_table)
         for word, score in f_table.items():
             total_score_per_sentence += score
-
+        # formula
         sentenceValue[sent] = total_score_per_sentence / count_words_in_sentence
 
     return sentenceValue
 
 
 def _find_score(sentenceValue, percent_sentences) -> int:
-    """
-    Find the average score from the sentence value dictionary
-    :rtype: int
-    """
+    """Find the average score from the sentence value dictionary
+
+    Args:
+        sentenceValue (dict): sentences' values above 
+        percent_sentences (int): percent of information to retain
+
+    Returns:
+        int: threshold to keep
+    """   
 
     values = []
     for entry in sentenceValue:
@@ -131,9 +188,20 @@ def _find_score(sentenceValue, percent_sentences) -> int:
 
 
 def _generate_summary(sentences, sentenceValue, threshold):
+    """get the summary: if value above the threshold
+
+    Args:
+        sentences (list): all sentences
+        sentenceValue (dict): the dict storing its value
+        threshold (int): threshold to select sentences
+
+    Returns:
+        (str): summary
+    """    
     sentence_count = 0
     summary = ''
 
+    # check if qualify 
     for sentence in sentences:
         if sentence[:15] in sentenceValue and sentenceValue[sentence[:15]] >= (threshold):
             summary += " " + sentence
@@ -142,18 +210,18 @@ def _generate_summary(sentences, sentenceValue, threshold):
     return summary
 
 
-def summarizer_tfidf_get(text, percent_sentences):
-    """
-    :param text: Plain summary_text of long article
-    :return: summarized summary_text
-    """
+def summarizer_tfidf_get(text, percent_sentences = 50):
+    """sumarize using tfidf
 
-    '''
-    We already have a sentence tokenizer, so we just need 
-    to run the sent_tokenize() method to create the array of sentences.
-    '''
+    Args:
+        text (str): the text to summarize
+        percent_sentences (int, optional): percent to retain. Defaults to 50.
+
+    Returns:
+        (str) summarized summary_text
+    """ 
+
     sentences = sent_tokenize(text)
-    num_sentences = int(percent_sentences / 100 * len(sentences))
 
     # 1 Sentence Tokenize
     

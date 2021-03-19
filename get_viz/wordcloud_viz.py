@@ -4,12 +4,22 @@ mpl.use('Agg')
 import matplotlib.pyplot as plt
 
 def wordcloud_viz(txt, name):
+  """plot word cloud
+
+  Args:
+      txt (str): text for plot
+      name (str) file name
+
+  Returns:
+      file location
+  """  
   try:
     txt = txt.lower()
     mpl.rcParams['font.size']=12                #10
     mpl.rcParams['savefig.dpi']=100             #72
     mpl.rcParams['figure.subplot.bottom']=.1
 
+    # get stopwords to remove
     stopwords = set(STOPWORDS)
 
     wordcloud = WordCloud(
@@ -24,7 +34,14 @@ def wordcloud_viz(txt, name):
     plt.imshow(wordcloud)
     plt.axis('off')
     # plt.show()
-    plt.savefig(f"/home/viethoangtranduong/xlite_capstone/static/image_output/{name}_wordcloud_viz.jpg", dpi=500)
+
+    
+    # if pythonanywhere, use the following url
+    # plt.savefig(f"/home/viethoangtranduong/xlite_capstone/static/image_output/{name}_most_frequent_viz.png", dpi=500) 
+    
+    # if not pythonanywhere
+    plt.savefig(f"./static/image_output/{name}_wordcloud_viz.jpg", dpi=500)
+
     print("done wordcloud", f"./static/image_output/{name}_wordcloud_viz.jpg")
     return f"static/image_output/{name}_wordcloud_viz.jpg"
   except:

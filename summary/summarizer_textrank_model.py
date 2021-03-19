@@ -16,7 +16,7 @@ def remove_stopwords(sen):
     sen_new = " ".join([i for i in sen if i not in stop_words])
     return sen_new
 
-# Extract word vectors
+# Extract word vectors - get Glove embeddings
 word_embeddings = {}
 print("start loading vectorization")
 f = open('/home/viethoangtranduong/xlite_capstone/summary/vectorization/glove.6B.50d.txt', encoding='utf-8')
@@ -27,7 +27,18 @@ for line in f:
     word_embeddings[word] = coefs
 f.close()
 
-def summarizer_textrank_get(text, percent_sentences):
+def summarizer_textrank_get(text, percent_sentences = 50):
+    """summarizing using textrank method
+    compute the pageranke levels after embeeded each sentence into a vector 
+    with weight = its cosine similarity
+
+    Args:
+        text (str): the text to summarize
+        percent_sentences (int, optional): percent to retain. Defaults to 50.
+
+    Returns:
+        dictionary with the method [method], summary [sentences], number of sentences [summary_num_sentences]
+    """    
     num_sentences = int(percent_sentences / 100 * len(sent_tokenize(text)))
     sentences = []
     for s in [text]:
