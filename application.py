@@ -12,6 +12,10 @@ from get_viz.show_viz_choice import show_viz_choice
 import time
 import string
 
+import nltk
+nltk.download('punkt')
+nltk.download('stopwords')
+
 application = Flask(__name__, static_url_path='/static')
 
 @application.route('/')

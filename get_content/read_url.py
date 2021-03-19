@@ -1,6 +1,6 @@
 from newspaper import Article
-import nltk
-nltk.download('punkt')
+# import nltk
+# nltk.download('punkt')
 
 
 def read_url(url):

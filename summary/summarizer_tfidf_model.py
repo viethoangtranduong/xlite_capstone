@@ -1,8 +1,5 @@
 import math
 from nltk import sent_tokenize, word_tokenize, PorterStemmer
-import nltk
-nltk.download('punkt')
-nltk.download('stopwords')
 from nltk.corpus import stopwords  
 import numpy as np
   

@@ -1,13 +1,10 @@
 import numpy as np
 import pandas as pd
-import nltk
-from aylienapiclient import textapi
-# nltk.download('punkt') # one time execution
-# nltk.download('stopwords')
+# from aylienapiclient import textapi
 from nltk.corpus import stopwords
 from nltk.tokenize import sent_tokenize
 stop_words = stopwords.words('english')
-import re
+# import re
 from sklearn.metrics.pairwise import cosine_similarity
 import networkx as nx
 
