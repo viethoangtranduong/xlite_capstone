@@ -19,7 +19,12 @@ def remove_stopwords(sen):
 # Extract word vectors - get Glove embeddings
 word_embeddings = {}
 print("start loading vectorization")
-f = open('/home/viethoangtranduong/xlite_capstone/summary/vectorization/glove.6B.50d.txt', encoding='utf-8')
+
+# if pythonanywhere
+# f = open('/home/viethoangtranduong/xlite_capstone/summary/vectorization/glove.6B.50d.txt', encoding='utf-8')
+
+# if not pythonanywhere
+f = open('./summary/vectorization/glove.6B.50d.txt', encoding='utf-8')
 for line in f:
     values = line.split()
     word = values[0]

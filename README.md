@@ -17,3 +17,7 @@ The file structure for the web app running at ""
 - medium_data: crawled data for Medium publishers
 - static: css + image component for the web app
 - template: HTML file for the web app
+
+
+## Steps to run the code
+    

@@ -45,7 +45,13 @@ def select_medium(entry, start_date, end_date, num_result = 10):
   """  
 
   # get all data
-  data = pd.read_csv("/home/viethoangtranduong/xlite_capstone/medium_data/" + entry)
+
+  #if pythonanywhere
+  # data = pd.read_csv("/home/viethoangtranduong/xlite_capstone/medium_data/" + entry)
+
+  # if not puthonanywhere
+  data = pd.read_csv("./medium_data/" + entry)
+
 
   # convert the data back to its original type
   data.paragraphs = data.paragraphs.apply(literal_eval)
